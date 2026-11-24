@@ -39,6 +39,13 @@ def pick_output_dir():
 def ship_picture():
     """Copy entry.png beside this file into the output directory."""
     source = Path(__file__).resolve().parent / PICTURE_NAME
+    if not source.is_file():
+        raise FileNotFoundError(
+            f"missing {PICTURE_NAME} next to {Path(__file__).name}: "
+            "nothing to ship"
+        )
+    if source.stat().st_size == 0:
+        raise ValueError(f"{PICTURE_NAME} is empty: nothing to ship")
     destination_dir = Path(pick_output_dir())
     destination_dir.mkdir(parents=True, exist_ok=True)
     destination = destination_dir / PICTURE_NAME
