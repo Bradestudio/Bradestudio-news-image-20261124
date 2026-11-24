@@ -32,7 +32,12 @@ SANS_B = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
 
 def font(path, size):
-    return ImageFont.truetype(path, size)
+    """Load a TrueType font, falling back to Pillow's built-in bitmap font
+    when the file is missing (e.g. a minimal container without DejaVu)."""
+    try:
+        return ImageFont.truetype(path, size)
+    except OSError:
+        return ImageFont.load_default()
 
 
 def shrink_to_fit(draw, text, path, size, max_w, min_size=7):
